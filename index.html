@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>GRBASMH Engineering & Maintenance Tracker</title>
+<style>
+:root{--navy:#0B132B;--blue:#1C77C3;--cyan:#00D9FF;--orange:#FF8C32;--red:#E53935;--green:#22A06B;--bg:#F3F6FA;--card:#fff;--tx:#0B132B;--mu:#5b6678;--bd:#dde4ee;color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0a1020;--card:#131c36;--tx:#eaf0fb;--mu:#9aa8c2;--bd:#25314f;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#0a1020;--card:#131c36;--tx:#eaf0fb;--mu:#9aa8c2;--bd:#25314f;color-scheme:dark}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--tx);font:15px/1.45 "Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif}
+h1,h2,h3{font-family:"Trebuchet MS","Segoe UI",sans-serif;margin:0 0 .5rem;letter-spacing:-.01em}
+nav{position:fixed;left:0;top:0;bottom:0;width:210px;background:var(--navy);color:#cfe0f5;padding:18px 10px;z-index:5;overflow:auto;padding-top:calc(18px + env(safe-area-inset-top,0px))}
+nav b{display:block;color:#fff;font-size:15px;padding:0 8px 4px}nav small{display:block;padding:0 8px 16px;color:var(--cyan)}
+nav button{display:flex;gap:10px;align-items:center;width:100%;background:none;border:0;color:inherit;padding:10px;border-radius:8px;cursor:pointer;font:inherit;text-align:left;margin-bottom:2px}
+nav button:hover{background:#1b2a52}nav button.on{background:var(--blue);color:#fff;box-shadow:inset 4px 0 var(--orange)}
+svg.i{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;flex:none}
+main{margin-left:210px;padding:22px;max-width:1100px;position:relative;z-index:1}
+.card{background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:16px;margin-bottom:14px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:12px;margin-bottom:14px}
+.stat{background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:14px;border-top:4px solid var(--blue)}
+.stat.o{border-top-color:var(--orange)}.stat.g{border-top-color:var(--green)}.stat.r{border-top-color:var(--red)}
+.stat span{color:var(--mu);font-size:12.5px}.stat strong{display:block;font-size:22px;margin:2px 0}
+.hero{background:linear-gradient(120deg,var(--navy),#14356b);color:#fff;border-radius:14px;padding:22px;margin-bottom:14px;position:relative;overflow:hidden}
+.hero p{margin:.2rem 0;color:#cfe0f5}
+button.b,.b{background:var(--blue);color:#fff;border:0;border-radius:8px;padding:9px 14px;cursor:pointer;font:inherit;font-weight:600}
+.b.o{background:var(--orange);color:#1a1a1a}.b.g{background:transparent;color:var(--tx);border:1px solid var(--bd)}.b.d{background:var(--red)}.b.s{padding:5px 9px;font-size:13px}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:10px}
+input,select,textarea{font:inherit;color:var(--tx);background:var(--card);border:1px solid var(--bd);border-radius:8px;padding:8px;width:100%}
+label{display:block;font-size:13px;color:var(--mu);margin-bottom:8px}
+.f{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:0 12px}.f .w{grid-column:1/-1}
+table{width:100%;border-collapse:collapse}th,td{text-align:left;padding:8px;border-bottom:1px solid var(--bd);font-size:14px}th{color:var(--mu);font-weight:600}
+.tw{overflow-x:auto}
+.cal{display:grid;grid-template-columns:repeat(7,1fr);gap:4px}.cal .h{text-align:center;color:var(--mu);font-size:12px;padding:4px}
+.d{min-height:62px;border:1px solid var(--bd);border-radius:8px;padding:4px;font-size:12px;cursor:pointer;background:var(--card);overflow:hidden}
+.d.x{opacity:.35;cursor:default}.d.w{background:rgba(28,119,195,.1)}.d.t{outline:2px solid var(--cyan)}.d.sel{outline:2px solid var(--orange)}
+.pay{display:block;margin-top:3px;background:var(--red);color:#fff;border-radius:5px;padding:1px 4px;font-weight:700;font-size:11px}.pay.ok{background:var(--green)}
+.dot{display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--orange);margin-left:3px}
+.tag{display:inline-block;padding:2px 8px;border-radius:99px;font-size:12px;font-weight:600;background:var(--bd)}
+.tag.Received,.tag.Completed,.tag.Active{background:rgba(34,160,107,.2);color:var(--green)}.tag.Delayed{background:rgba(229,57,53,.18);color:var(--red)}.tag.Upcoming,.tag.Pending,.tag.Ongoing{background:rgba(255,140,50,.2);color:var(--orange)}
+.bar{display:flex;gap:4px;align-items:flex-end;height:130px}.bar div{flex:1;text-align:center;font-size:11px;color:var(--mu)}.bar i{display:block;width:45%;display:inline-block;vertical-align:bottom}
+.tl{position:relative;height:64px;margin:10px 8px}.tl .ln{position:absolute;top:30px;left:0;right:0;height:6px;background:var(--bd);border-radius:3px}.tl .fl{position:absolute;top:30px;height:6px;background:var(--blue);border-radius:3px}
+.tl .m{position:absolute;top:24px;width:4px;height:18px;background:var(--red);border-radius:2px}.tl .m.e{background:var(--navy);width:6px}.tl .m.s{background:var(--green);width:6px}
+.tl em{position:absolute;top:44px;font-size:10px;font-style:normal;color:var(--mu);transform:translateX(-50%);white-space:nowrap}
+#modal{position:fixed;inset:0;background:rgba(5,10,25,.6);display:none;align-items:flex-start;justify-content:center;overflow:auto;z-index:20;padding:20px}
+#modal .box{background:var(--card);border-radius:14px;padding:18px;width:min(640px,100%);margin:auto}
+#toast{position:fixed;right:14px;bottom:calc(76px + env(safe-area-inset-bottom,0px));background:var(--navy);color:#fff;padding:10px 14px;border-radius:8px;display:none;z-index:30;border-left:5px solid var(--green)}
+#toast.err{border-color:var(--red)}
+.fx{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden}.fx svg{position:absolute;width:64px;height:64px;fill:none;stroke:var(--blue);stroke-width:1.2;opacity:.13;animation:fl 14s ease-in-out infinite}
+@keyframes fl{50%{transform:translateY(-26px) rotate(14deg)}}
+.rm .fx svg{animation:none}.rm *{transition:none!important}
+@media(prefers-reduced-motion:reduce){.fx svg{animation:none}}
+.empty{text-align:center;color:var(--mu);padding:22px}.mu{color:var(--mu);font-size:13px}.neg{color:var(--red)}
+#pv{display:none}
+@media print{nav,main,#modal,#toast,.fx{display:none!important}#pv{display:block;color:#000;background:#fff;padding:10px}#pv td,#pv th{border:1px solid #999}}
+@media(max-width:760px){nav{top:auto;width:auto;right:0;height:auto;display:flex;padding:4px;overflow-x:auto;padding-bottom:calc(4px + env(safe-area-inset-bottom,0px))}nav b,nav small{display:none}nav button{flex-direction:column;gap:2px;font-size:10px;width:auto;min-width:64px;text-align:center;padding:6px}nav button.on{box-shadow:inset 0 3px var(--orange)}main{margin-left:0;padding:14px 12px 100px}.d{min-height:50px}}
+</style></head><body>
+<div class="fx" aria-hidden="true">
+<svg viewBox="0 0 24 24" style="left:6%;top:14%"><path d="M13 2L3 14h9l-1 8 10-12h-9z"/></svg>
+<svg viewBox="0 0 24 24" style="left:82%;top:24%;animation-delay:-4s"><path d="M2 18h20M4 18v-2a8 8 0 0116 0v2M10 8V5h4v3"/></svg>
+<svg viewBox="0 0 24 24" style="left:70%;top:72%;animation-delay:-8s"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M4.9 19.1L7 17M17 7l2.1-2.1"/></svg>
+<svg viewBox="0 0 24 24" style="left:30%;top:80%;animation-delay:-2s"><path d="M14.7 6.3a4 4 0 005 5L21 13l-8 8-4-4 8-8z"/></svg>
+</div>
+<nav id="nav"></nav><main id="app"></main><div id="modal"></div><div id="toast"></div><div id="pv"></div>
+<script>
+"use strict";
+const IC={dash:'<rect x="3" y="3" width="7" height="9"/><rect x="14" y="3" width="7" height="5"/><rect x="14" y="12" width="7" height="9"/><rect x="3" y="16" width="7" height="5"/>',cal:'<rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/>',rep:'<rect x="8" y="2" width="8" height="4" rx="1"/><path d="M16 4h2a2 2 0 012 2v14a2 2 0 01-2 2H6a2 2 0 01-2-2V6a2 2 0 012-2h2M9 12h6M9 16h6"/>',exp:'<path d="M20 7H5a2 2 0 010-4h13v4zM3 5v14a2 2 0 002 2h15V7"/><circle cx="16" cy="14" r="1"/>',bud:'<path d="M21 12A9 9 0 1112 3v9z"/>',emp:'<rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v16"/>',out:'<path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6M12 12v6M9 15l3 3 3-3"/>',set:'<circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M4.9 19.1L7 17M17 7l2.1-2.1"/>'};
+const PG=[['dash','Dashboard'],['cal','Salary Calendar'],['rep','Daily Accomplishments'],['exp','Weekly Expenses'],['bud','Monthly Budget'],['emp','My Employment'],['out','Reports and Exports'],['set','Settings']];
+const ico=k=>`<svg class="i" viewBox="0 0 24 24">${IC[k]}</svg>`;
+const KEY='grbasmh_tracker_v1';
+const TODAY=new Date().toLocaleDateString('en-CA',{timeZone:'Asia/Manila'});
+const $=s=>document.querySelector(s);
+const e=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const uid=()=>Math.random().toString(36).slice(2,9);
+const php=n=>'₱'+(Number(n)||0).toLocaleString('en-PH',{minimumFractionDigits:2,maximumFractionDigits:2});
+const D=i=>new Date(i+'T00:00:00Z');
+const fd=i=>i?D(i).toLocaleDateString('en-PH',{day:'numeric',month:'short',year:'numeric',timeZone:'UTC'}):'—';
+const MN=['January','February','March','April','May','June','July','August','September','October','November','December'];
+const dim=(y,m)=>new Date(Date.UTC(y,m,0)).getUTCDate();
+const ymd=(y,m,d)=>`${y}-${String(m).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+const dd=(a,b)=>Math.round((D(b)-D(a))/864e5);
+const mlabel=ym=>MN[+ym.slice(5)-1]+' '+ym.slice(0,4);
+const r2=n=>Math.round(n*100)/100;
+function seed(){return{name:'Ceazar SolCruz Jr.',cur:'j1',theme:'auto',rm:false,jobs:[{id:'j1',workplace:'GRBASMH Engineering and Maintenance',title:'Maintenance Technician',salary:15000,freq:'Twice a month',start:'2026-10-19',end:'2026-12-31',status:'Active',notes:'',pd:'15,30',method:'calendar',divisor:30,manual:'',inclOut:false}],pay:{},exp:[],rep:[]}}
+let S;try{S=JSON.parse(localStorage.getItem(KEY))}catch(_){}
+S=S||seed();let LOCAL_OK=true;
+function save(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(_){LOCAL_OK=false}}
+const V={page:'dash',ym:TODAY.slice(0,7),sel:null,rq:'',rs:'',bp:'all',jf:'all'};
+const job=()=>S.jobs.find(j=>j.id===S.cur)||S.jobs[0];
+function toast(m,er){const t=$('#toast');t.textContent=m;t.className=er?'err':'';t.style.display='block';clearTimeout(toast.t);toast.t=setTimeout(()=>t.style.display='none',2800)}
+/* payroll logic */
+function monthExpected(j,y,m){const n=dim(y,m),a=ymd(y,m,1),b=ymd(y,m,n),s=j.start>a?j.start:a,en=j.end<b?j.end:b;if(s>en)return 0;const days=dd(s,en)+1;if(days===n)return +j.salary;
+if(j.manual!==''&&j.start.slice(0,7)===a.slice(0,7))return +j.manual;const dv=j.method==='custom'?(+j.divisor||n):n;return r2(Math.min(+j.salary,j.salary*days/dv))}
+function paydaysIn(j,y,m){const out=[];[...new Set(j.pd.split(',').map(x=>+x.trim()).filter(x=>x>0&&x<32))].sort((a,b)=>a-b).forEach(d=>{const iso=ymd(y,m,Math.min(d,dim(y,m)));if(j.inclOut||(iso>=j.start&&iso<=j.end))out.push(iso)});return out}
+const prec=(j,iso)=>S.pay[j.id+'|'+iso]||{};
+function expOf(j,iso){const p=prec(j,iso);if(p.exp!==undefined&&p.exp!=='')return +p.exp;const y=+iso.slice(0,4),m=+iso.slice(5,7);let t=monthExpected(j,y,m);if(!t&&j.inclOut)t=+j.salary;const c=paydaysIn(j,y,m).length||1;return r2(t/c)}
+const recOf=(j,iso)=>{const p=prec(j,iso);return p.status==='Received'?(+p.amt||0):0};
+function allPaydays(j){const out=[];let y=+j.start.slice(0,4),m=+j.start.slice(5,7)-(j.inclOut?1:0);const ey=+j.end.slice(0,4),em=+j.end.slice(5,7)+(j.inclOut?1:0);
+for(let i=0;i<600&&(y<ey||(y===ey&&m<=em));i++){if(m<1){m=12;y--}paydaysIn(j,y,m).forEach(x=>out.push(x));m++;if(m>12){m=1;y++}}return out}
+const inP=(iso,ym)=>!ym||iso.startsWith(ym);
+function sal(j,ym){let ex=0,re=0,un=0;allPaydays(j).filter(i=>inP(i,ym)).forEach(i=>{const x=expOf(j,i),r=recOf(j,i);ex+=x;re+=r;if(i<=TODAY)un+=Math.max(0,x-r)});return{ex:r2(ex),re:r2(re),un:r2(un),left:r2(Math.max(0,ex-re))}}
+const expJ=(j,ym)=>r2(S.exp.filter(x=>x.job===j.id).reduce((s,x)=>s+Object.entries(x.alloc).filter(([k])=>inP(k,ym)).reduce((a,[,v])=>a+v,0),0));
+const repsJ=j=>S.rep.filter(r=>r.job===j.id);
+function months(j){const o=[];let y=+j.start.slice(0,4),m=+j.start.slice(5,7);const ey=+j.end.slice(0,4),em=+j.end.slice(5,7);while(y<ey||(y===ey&&m<=em)){o.push(ymd(y,m,1).slice(0,7));m++;if(m>12){m=1;y++}if(o.length>240)break}return o}
+function jstate(j){return j.status==='On Hold'?'On Hold':j.start>TODAY?'Upcoming':(j.status==='Completed'||j.end<TODAY)?'Completed':'Active'}
+/* ui helpers */
+function render(){document.documentElement.dataset.theme=S.theme==='auto'?'':S.theme;document.body.classList.toggle('rm',!!S.rm);
+$('#nav').innerHTML='<b>GRBASMH</b><small>Engineering & Maintenance</small>'+PG.map(([k,l])=>`<button title="${l}" class="${V.page===k?'on':''}" data-go="${k}">${ico(k)}<span>${l}</span></button>`).join('');
+$('#app').innerHTML=({dash,cal,rep,exp,bud,emp,out,set})[V.page]();save()}
+const go=(p,x)=>{Object.assign(V,x||{});V.page=p;render();scrollTo(0,0)};
+function modal(h){const m=$('#modal');m.innerHTML=`<div class="box">${h}</div>`;m.style.display='flex'}
+const closeM=()=>$('#modal').style.display='none';
+const jsel=()=>`<select data-act="job">${S.jobs.map(j=>`<option value="${j.id}" ${j.id===S.cur?'selected':''}>${e(j.workplace)}</option>`).join('')}</select>`;
+const jbar=()=>`<div class="row" style="max-width:380px"><label style="margin:0;flex:1">Employment record ${jsel()}</label></div>`;
+const val=id=>$('#'+id).value.trim();
+const fld=(id,l,v,t='text',x='')=>`<label>${l}<input id="${id}" type="${t}" value="${e(v)}" ${x}></label>`;
+function monthGrid(ym,cell){const y=+ym.slice(0,4),m=+ym.slice(5),first=new Date(Date.UTC(y,m-1,1)).getUTCDay();let h='<div class="cal">'+['Sun','Mon','Tue','Wed','Thu','Fri','Sat'].map(d=>`<div class="h">${d}</div>`).join('');
+for(let i=0;i<first;i++)h+='<div class="d x"></div>';for(let d=1;d<=dim(y,m);d++){const iso=ymd(y,m,d);h+=cell(iso,d)}return h+'</div>'}
+function monthNav(act){const[y,m]=[+V.ym.slice(0,4),+V.ym.slice(5)];const ys=[];for(let i=y-3;i<=y+5;i++)ys.push(i);
+return `<div class="row"><button class="b g s" data-act="${act}" data-d="-1">‹ Previous</button><select style="width:auto" id="sm">${MN.map((n,i)=>`<option value="${i+1}" ${i+1===m?'selected':''}>${n}</option>`).join('')}</select><select style="width:auto" id="sy">${ys.map(i=>`<option ${i===y?'selected':''}>${i}</option>`).join('')}</select><button class="b g s" data-act="${act}" data-d="1">Next ›</button><button class="b g s" data-act="today">Today</button></div>`}
+/* pages */
+function dash(){const j=job(),ym=TODAY.slice(0,7),all=sal(j),mo=sal(j,ym),ex=expJ(j,ym),rp=repsJ(j),days=new Set(rp.map(r=>r.date)).size;
+const st=(c,l,v,s)=>`<div class="stat ${c}"><span>${l}</span><strong>${v}</strong><span>${s}</span></div>`;
+return `<div class="hero"><h1>${e(S.name)}</h1><p>${e(j.workplace)} · ${e(j.title)}</p><p>Welcome back, ${e(S.name.split(' ')[0])}. Track your work, manage your earnings, and build your future one day at a time.</p><p><span class="tag ${jstate(j)}">${jstate(j)}</span> Contract: ${fd(j.start)} – ${fd(j.end)} · ${MN[+ym.slice(5)-1]} ${ym.slice(0,4)}</p></div>
+<div class="row"><button class="b o" data-act="addrep">Add Daily Accomplishment</button><button class="b" data-act="addexp">Add Weekly Expenses</button><button class="b g" data-go="cal">View Salary Calendar</button><button class="b g" data-act="addjob">Add New Job</button><button class="b g" data-go="set">Edit Salary and Employment Details</button></div>${jbar()}
+<div class="grid">${st('','Monthly salary',php(j.salary),'Editable setting')}${st('g','Total salary received',php(all.re),'Payments marked Received')}${st('o','Remaining expected salary',php(all.left),'Expected minus received')}${st('r','Expenses this month',php(ex),mlabel(ym))}${st('g','Remaining budget (this month)',php(mo.re-ex),'Received minus expenses')}${st('','Days worked',days,'Days with a report')}${st('o','Reports submitted',rp.length,'Accomplishment reports')}</div>`}
+function cal(){const j=job();const ym=V.ym;const pds=new Set(allPaydays(j));
+const g=monthGrid(ym,(iso,d)=>{const w=iso>=j.start&&iso<=j.end,p=pds.has(iso),pr=prec(j,iso);return `<div class="d ${w?'w':''} ${iso===TODAY?'t':''}" ${p?`data-act="payday" data-d="${iso}"`:''}>${d}${p?`<span class="pay ${pr.status==='Received'?'ok':''}">${pr.status||'Upcoming'}<br>${php(expOf(j,iso)).replace('.00','')}</span>`:''}</div>`});
+const list=[...pds].filter(i=>i.startsWith(ym));
+return `<h2>Salary Calendar</h2>${jbar()}${monthNav('cm')}<div class="card">${g}<p class="mu">Blue = workday in contract · Red badge = payday (click to edit) · Green = received</p></div>
+<div class="card"><h3>Paydays in ${mlabel(ym)}</h3>${list.length?`<div class="tw"><table><tr><th>Date</th><th>Expected</th><th>Received</th><th>Status</th><th>Paid on</th></tr>${list.map(i=>{const p=prec(j,i);return `<tr data-act="payday" data-d="${i}" style="cursor:pointer"><td>${fd(i)}</td><td>${php(expOf(j,i))}</td><td>${php(recOf(j,i))}</td><td><span class="tag ${p.status||'Upcoming'}">${p.status||'Upcoming'}</span></td><td>${fd(p.paid)}</td></tr>`}).join('')}</table></div>`:'<div class="empty">No paydays in this month for the selected contract dates.</div>'}</div>`}
+function payModal(iso){const j=job(),p=prec(j,iso);modal(`<h3>Payday: ${fd(iso)}</h3><p class="mu">Expected amount is a planning value; edit it to match what your employer agreed.</p><div class="f">${fld('p1','Expected amount (₱)',expOf(j,iso),'number','step="0.01" min="0"')}${fld('p2','Actual amount received (₱)',p.amt??'','number','step="0.01" min="0"')}<label>Status<select id="p3">${['Upcoming','Received','Delayed'].map(s=>`<option ${(p.status||'Upcoming')===s?'selected':''}>${s}</option>`).join('')}</select></label>${fld('p4','Date actually paid',p.paid||'','date')}<label class="w">Notes<textarea id="p5" rows="2">${e(p.note)}</textarea></label></div><div class="row"><button class="b" data-act="savepay" data-d="${iso}">Save payment</button><button class="b g" data-act="close">Cancel</button></div>`)}
+function repForm(r){r=r||{};const j=job();const f=(id,l,k,rows)=>`<label class="w">${l}<textarea id="${id}" rows="${rows||2}">${e(r[k])}</textarea></label>`;
+modal(`<h3>${r.id?'Edit':'Add'} daily accomplishment</h3><div class="f">${fld('r_date','Date',r.date||(TODAY>=job().start?TODAY:job().start),'date')}${fld('r_proj','Workplace or project',r.proj||j.workplace)}${fld('r_title','Job title',r.title||j.title)}${fld('r_loc','Work location',r.loc||'')}
+<label class="w">What did you accomplish today? Write in simple words. You can edit the report anytime.<textarea id="r_work" rows="4">${e(r.work)}</textarea></label>${f('r_tools','Tools and equipment used','tools')}${f('r_tasks','Electrical or maintenance tasks completed','tasks')}${f('r_mat','Materials used','mat')}${f('r_ppe','Safety and PPE compliance','ppe')}${f('r_prob','Problems encountered','prob')}${f('r_act','Actions taken','act')}
+<label>Status<select id="r_st">${['Completed','Ongoing','Pending'].map(s=>`<option ${(r.st||'Completed')===s?'selected':''}>${s}</option>`).join('')}</select></label>${f('r_rem','Remarks or supervisor feedback','rem',1)}</div><div class="row"><button class="b" data-act="saverep" data-id="${r.id||''}">Save Report</button><button class="b g" data-act="close">Cancel</button></div>`)}
+function repCard(r){return `<div class="card"><div class="row" style="justify-content:space-between"><b>${fd(r.date)} · ${e(r.proj)}</b><span class="tag ${r.st}">${r.st}</span></div><p>${e(r.work)}</p><p class="mu">${[['Tasks',r.tasks],['Tools',r.tools],['Materials',r.mat],['PPE',r.ppe],['Problems',r.prob],['Actions',r.act],['Remarks',r.rem],['Location',r.loc]].filter(x=>x[1]).map(x=>`<b>${x[0]}:</b> ${e(x[1])}`).join(' · ')}</p><button class="b g s" data-act="editrep" data-id="${r.id}">Edit</button> <button class="b d s" data-act="delrep" data-id="${r.id}">Delete</button></div>`}
+function rep(){const j=job(),rs=repsJ(j),has=new Set(rs.map(r=>r.date));
+const g=monthGrid(V.ym,(iso,d)=>`<div class="d ${iso===TODAY?'t':''} ${iso===V.sel?'sel':''}" data-act="pickday" data-d="${iso}">${d}${has.has(iso)?'<span class="dot"></span>':''}</div>`);
+let list=rs.filter(r=>V.sel?r.date===V.sel:r.date.startsWith(V.ym));const q=V.rq.toLowerCase();if(q)list=rs.filter(r=>JSON.stringify(r).toLowerCase().includes(q));if(V.rs)list=list.filter(r=>r.st===V.rs);list.sort((a,b)=>b.date.localeCompare(a.date));
+return `<h2>Daily Accomplishments</h2>${jbar()}<div class="row"><button class="b o" data-act="addrep">Add report</button><button class="b g" data-go="out">Print report</button></div>${monthNav('rm')}<div class="card">${g}<p class="mu">Orange dot = day has reports. Click a date to see them.</p></div>
+<div class="row"><input id="rq" placeholder="Search reports" value="${e(V.rq)}" style="flex:2"><select id="rf" style="flex:1"><option value="">All statuses</option>${['Completed','Ongoing','Pending'].map(s=>`<option ${V.rs===s?'selected':''}>${s}</option>`).join('')}</select><button class="b g s" data-act="clrsel">Show whole month</button></div>
+<h3>${q?'Search results':V.sel?'Reports for '+fd(V.sel):'Reports in '+mlabel(V.ym)}</h3>${list.length?list.map(repCard).join(''):'<div class="card empty">No reports here yet. Press “Add report” to write your first one.</div>'}`}
+function expForm(){const j=job();modal(`<h3>Add weekly expense</h3><div class="f">${fld('x_ws','Week starting','', 'date')}${fld('x_we','Week ending','','date')}${fld('x_amt','Total amount spent (₱)','','number','step="0.01" min="0"')}<label>Count this expense in<select id="x_as"><option value="s">Month of week start</option><option value="e">Month of week end</option><option value="sp">Split between both months</option></select></label>${fld('x_sp','If split: amount for first month (₱)','','number','step="0.01" min="0"')}${fld('x_note','Notes (optional)','')}</div><p class="mu">Record: ${e(j.workplace)}. A split puts the rest in the second month, so nothing is counted twice.</p><div class="row"><button class="b" data-act="saveexp">Save expense</button><button class="b g" data-act="close">Cancel</button></div>`)}
+function exp(){const j=job(),L=S.exp.filter(x=>x.job===j.id).sort((a,b)=>b.ws.localeCompare(a.ws)),tot=expJ(j),avg=L.length?tot/L.length:0;
+return `<h2>Weekly Expenses</h2>${jbar()}<div class="grid"><div class="stat o"><span>Total this contract</span><strong>${php(tot)}</strong></div><div class="stat"><span>Average weekly spending</span><strong>${php(avg)}</strong></div><div class="stat g"><span>Received minus expenses</span><strong class="${sal(j).re-tot<0?'neg':''}">${php(sal(j).re-tot)}</strong></div></div>
+<div class="row"><button class="b o" data-act="addexp">Add weekly expense</button></div><div class="card tw">${L.length?`<table><tr><th>Week</th><th>Amount</th><th>Counted in</th><th>Notes</th><th></th></tr>${L.map(x=>`<tr><td>${fd(x.ws)} – ${fd(x.we)}</td><td>${php(x.amt)}</td><td>${Object.entries(x.alloc).map(([k,v])=>`${mlabel(k)}: ${php(v)}`).join('<br>')}</td><td>${e(x.note)}</td><td><button class="b d s" data-act="delexp" data-id="${x.id}">Delete</button></td></tr>`).join('')}</table>`:'<div class="empty">No expenses recorded. Add what you spent each week.</div>'}</div>
+<div class="card"><h3>Monthly totals</h3>${months(j).map(m=>`<div class="row" style="justify-content:space-between"><span>${mlabel(m)}</span><b>${php(expJ(j,m))}</b></div>`).join('')}</div>`}
+function bud(){const j=job(),ms=months(j),p=V.bp==='all'?null:V.bp,s=sal(j,p),ex=expJ(j,p),mx=Math.max(1,...ms.map(m=>Math.max(sal(j,m).re,expJ(j,m))));
+return `<h2>Monthly Budget</h2>${jbar()}<label style="max-width:260px">Period<select id="bp"><option value="all">Complete contract</option>${ms.map(m=>`<option value="${m}" ${V.bp===m?'selected':''}>${mlabel(m)}</option>`).join('')}</select></label>
+<div class="grid"><div class="stat"><span>Expected salary</span><strong>${php(s.ex)}</strong></div><div class="stat g"><span>Salary actually received</span><strong>${php(s.re)}</strong></div><div class="stat o"><span>Recorded expenses</span><strong>${php(ex)}</strong></div><div class="stat"><span>Remaining cash (received − expenses)</span><strong class="${s.re-ex<0?'neg':''}">${php(s.re-ex)}</strong></div><div class="stat r"><span>Expected unpaid salary (due so far)</span><strong>${php(s.un)}</strong></div></div>
+<div class="card"><h3>Income received vs expenses</h3><div class="bar">${ms.map(m=>`<div><i style="height:${sal(j,m).re/mx*100}px;background:var(--green)"></i><i style="height:${expJ(j,m)/mx*100}px;background:var(--orange)"></i><br>${MN[+m.slice(5)-1].slice(0,3)}</div>`).join('')}</div><p class="mu"><span style="color:var(--green)">■</span> Received <span style="color:var(--orange)">■</span> Expenses</p></div>`}
+function tline(j){const tot=dd(j.start,j.end)+1,el=Math.max(0,Math.min(tot,dd(j.start,TODAY)+1)),pc=i=>dd(j.start,i)/Math.max(1,tot-1)*100;
+return `<h3>Contract timeline</h3><p>${tot} calendar days across ${months(j).length} calendar months · ${el} days elapsed</p><div class="tl"><div class="ln"></div><div class="fl" style="width:${Math.min(100,el/tot*100)}%"></div><div class="m s" style="left:0"></div><em style="left:2%">Start ${fd(j.start)}</em>${allPaydays(j).map(i=>`<div class="m" style="left:${pc(i)}%" title="Payday ${fd(i)}"></div>`).join('')}<div class="m e" style="right:0"></div><em style="left:96%">End ${fd(j.end)}</em></div><p class="mu">Red marks = scheduled paydays. ${months(j).map(m=>`${mlabel(m)}: ${repsJ(j).filter(r=>r.date.startsWith(m)).length} reports`).join(' · ')}</p>`}
+function emp(){const j=job(),L=S.jobs.filter(x=>V.jf==='all'||jstate(x)===V.jf);
+return `<h2>My Employment</h2><div class="row"><button class="b o" data-act="addjob">Add New Job</button><select id="jf" style="width:auto">${['all','Active','Completed','Upcoming','On Hold'].map(s=>`<option ${V.jf===s?'selected':''}>${s}</option>`).join('')}</select></div>
+${L.map(x=>`<div class="card"><div class="row" style="justify-content:space-between"><b>${e(x.workplace)}</b><span class="tag ${jstate(x)}">${jstate(x)}</span></div><p>${e(x.title)} · ${php(x.salary)}/month · ${fd(x.start)} – ${fd(x.end)}</p><p class="mu">Paydays: ${e(x.pd)} · Received ${php(sal(x).re)} · Expenses ${php(expJ(x))} · ${repsJ(x).length} reports</p>${x.id===S.cur?'<span class="tag Active">Selected</span>':`<button class="b s" data-act="pickjob" data-id="${x.id}">Switch to this job</button>`}</div>`).join('')||'<div class="card empty">No jobs match this filter.</div>'}
+<div class="card">${tline(j)}</div>`}
+function jobFields(j,n){return `<div class="f">${fld('j_wp','Workplace name',j.workplace)}${fld('j_ti','Job title',j.title)}${fld('j_sa','Monthly salary (₱)',j.salary,'number','min="0" step="0.01"')}${fld('j_st','Employment start date',j.start,'date')}${fld('j_en','Employment end date',j.end,'date')}${fld('j_pd','Payday dates (comma separated)',j.pd)}<label>Employment status<select id="j_ss">${['Active','Completed','On Hold'].map(s=>`<option ${j.status===s?'selected':''}>${s}</option>`).join('')}</select></label><label>First-month proration method<select id="j_me"><option value="calendar" ${j.method==='calendar'?'selected':''}>Actual days in month</option><option value="custom" ${j.method==='custom'?'selected':''}>Custom daily-rate divisor</option></select></label>${fld('j_dv','Custom divisor (days)',j.divisor,'number','min="1"')}${fld('j_ma','Agreed partial-month amount (₱, optional override)',j.manual,'number','min="0" step="0.01"')}<label>Payments outside contract dates<select id="j_io"><option value="0">Do not include</option><option value="1" ${j.inclOut?'selected':''}>Include (I enable it)</option></select></label><label class="w">Notes<textarea id="j_no" rows="2">${e(j.notes)}</textarea></label></div>`}
+function readJob(j){const o={workplace:val('j_wp'),title:val('j_ti'),salary:+val('j_sa'),start:val('j_st'),end:val('j_en'),pd:val('j_pd'),status:$('#j_ss').value,method:$('#j_me').value,divisor:+val('j_dv')||30,manual:val('j_ma'),inclOut:$('#j_io').value==='1',notes:val('j_no')};
+if(!o.workplace)return toast('Enter a workplace name.',1);if(!(o.salary>=0)||val('j_sa')==='')return toast('Enter a valid monthly salary.',1);if(!o.start||!o.end)return toast('Choose start and end dates.',1);if(o.end<o.start)return toast('End date must be on or after the start date.',1);if(!o.pd.split(',').some(x=>+x>0&&+x<32))return toast('Enter payday dates like 15,30.',1);return Object.assign(j,o)}
+function set(){const j=job();return `<h2>Settings</h2>${jbar()}<div class="card"><h3>Employment details</h3>${fld('s_name','Employee name',S.name)}${jobFields(j)}<button class="b" data-act="savejob">Save changes</button><p class="mu">Everything on the calendar, timeline and budget recalculates from these values.</p></div>
+<div class="card"><h3>Display</h3><div class="row"><button class="b g" data-act="theme">Theme: ${S.theme}</button><button class="b g" data-act="motion">Reduce motion: ${S.rm?'On':'Off'}</button></div></div>`}
+function csv(rows){return rows.map(r=>r.map(c=>'"'+String(c??'').replace(/"/g,'""')+'"').join(',')).join('\n')}
+function out(){const j=job();
+return `<h2>Reports and Exports</h2>${jbar()}<div class="card"><h3>Printable accomplishment report</h3><div class="row"><select id="pm" style="width:auto">${months(j).map(m=>`<option value="${m}" ${V.ym===m?'selected':''}>${mlabel(m)}</option>`).join('')}</select><button class="b" data-act="print">Print report</button></div></div>
+<div class="card"><h3>Data stays on this device</h3><p class="${LOCAL_OK?'':'neg'}">${LOCAL_OK?'Your records are saved in this browser only (no online sync). Back them up often.':'This browser blocked saving. Copy a backup now.'}</p><div class="row"><button class="b g" data-act="csv" data-k="salary">CSV: salary</button><button class="b g" data-act="csv" data-k="exp">CSV: expenses</button><button class="b g" data-act="csv" data-k="rep">CSV: reports</button><button class="b g" data-act="backup">Full backup</button></div><label>Copy this text to save it, or paste a backup here and press Restore<textarea id="bk" rows="8"></textarea></label><button class="b o" data-act="restore">Restore from pasted backup</button></div>`}
+function printRep(){const j=job(),m=$('#pm')?val('pm'):V.ym,L=repsJ(j).filter(r=>r.date.startsWith(m)).sort((a,b)=>a.date.localeCompare(b.date));
+$('#pv').innerHTML=`<h1>Accomplishment Report</h1><p><b>Employee:</b> ${e(S.name)}<br><b>Workplace:</b> ${e(j.workplace)} · ${e(j.title)}<br><b>Period:</b> ${mlabel(m)}</p><table><tr><th>Date</th><th>Work performed</th><th>Tasks / tools / materials</th><th>Status</th></tr>${L.map(r=>`<tr><td>${fd(r.date)}</td><td>${e(r.work)}</td><td>${e([r.tasks,r.tools,r.mat].filter(Boolean).join(' | '))}</td><td>${r.st}</td></tr>`).join('')}</table><p><b>Summary:</b> ${L.length} reports, ${L.filter(r=>r.st==='Completed').length} completed.</p><p>Supervisor signature: ______________________</p>`;
+if(!L.length)return toast('No reports in that month to print.',1);window.print()}
+/* events */
+document.addEventListener('click',ev=>{const t=ev.target.closest('[data-go],[data-act]');if(!t)return;const a=t.dataset.act,d=t.dataset.d,id=t.dataset.id,j=job();
+if(t.dataset.go)return go(t.dataset.go);
+const shift=n=>{const y=+V.ym.slice(0,4),m=+V.ym.slice(5)-1+n;V.ym=new Date(Date.UTC(y,m,1)).toISOString().slice(0,7);render()};
+switch(a){case'cm':case'rm':shift(+d);break;case'today':V.ym=TODAY.slice(0,7);V.sel=null;render();break;case'close':closeM();break;
+case'payday':payModal(d);break;
+case'savepay':{const x=val('p1'),am=val('p2'),st=$('#p3').value;if(x===''||+x<0)return toast('Expected amount must be zero or more.',1);if(am!==''&&+am<0)return toast('Received amount cannot be negative.',1);if(st==='Received'&&am==='')return toast('Enter the amount received.',1);S.pay[j.id+'|'+d]={exp:x,amt:am,status:st,paid:val('p4'),note:val('p5')};closeM();render();toast('Payment saved.');break}
+case'addrep':repForm();break;case'editrep':repForm(S.rep.find(r=>r.id===id));break;
+case'saverep':{const o={date:val('r_date'),proj:val('r_proj'),title:val('r_title'),loc:val('r_loc'),work:val('r_work'),tools:val('r_tools'),tasks:val('r_tasks'),mat:val('r_mat'),ppe:val('r_ppe'),prob:val('r_prob'),act:val('r_act'),st:$('#r_st').value,rem:val('r_rem'),job:j.id};if(!o.date)return toast('Choose a date.',1);if(!o.work)return toast('Write what you accomplished.',1);if(id)Object.assign(S.rep.find(r=>r.id===id),o);else S.rep.push({id:uid(),...o});closeM();render();toast('Report saved.');break}
+case'delrep':if(confirm('Delete this report? This cannot be undone.')){S.rep=S.rep.filter(r=>r.id!==id);render();toast('Report deleted.')}break;
+case'pickday':V.sel=d;render();break;case'clrsel':V.sel=null;V.rq='';V.rs='';render();break;
+case'addexp':expForm();break;
+case'saveexp':{const ws=val('x_ws'),we=val('x_we'),am=+val('x_amt'),as=$('#x_as').value;if(!ws||!we)return toast('Choose week start and end dates.',1);if(we<ws)return toast('Week end must be on or after week start.',1);if(!(am>=0)||val('x_amt')==='')return toast('Enter the amount spent.',1);const m1=ws.slice(0,7),m2=we.slice(0,7);let al={};
+if(as==='s')al[m1]=am;else if(as==='e')al[m2]=am;else{const f=+val('x_sp');if(m1===m2)al[m1]=am;else{if(!(f>=0&&f<=am)||val('x_sp')==='')return toast('First-month amount must be between 0 and the total.',1);al[m1]=f;al[m2]=r2(am-f)}}
+S.exp.push({id:uid(),job:j.id,ws,we,amt:am,alloc:al,note:val('x_note')});closeM();render();toast('Expense saved.');break}
+case'delexp':if(confirm('Delete this expense entry?')){S.exp=S.exp.filter(x=>x.id!==id);render();toast('Expense deleted.')}break;
+case'addjob':{const n={id:uid(),workplace:'',title:'',salary:'',freq:'Twice a month',start:'',end:'',status:'Active',notes:'',pd:'15,30',method:'calendar',divisor:30,manual:'',inclOut:false};modal(`<h3>Add new job</h3><p class="mu">Your previous jobs and records stay untouched.</p>${jobFields(n)}<div class="row"><button class="b" data-act="savenew">Add job</button><button class="b g" data-act="close">Cancel</button></div>`);break}
+case'savenew':{const n={id:uid(),freq:'Twice a month'};if(readJob(n)){S.jobs.push(n);S.cur=n.id;closeM();go('emp');toast('Job added.')}break}
+case'savejob':{const n=val('s_name');if(!n)return toast('Enter the employee name.',1);if(readJob(j)){S.name=n;render();toast('Changes saved.')}break}
+case'pickjob':S.cur=id;render();toast('Switched job.');break;
+case'theme':S.theme={auto:'light',light:'dark',dark:'auto'}[S.theme];render();break;case'motion':S.rm=!S.rm;render();break;
+case'print':printRep();break;
+case'csv':{const k=t.dataset.k;let r;if(k==='salary')r=[['Payday','Expected','Received','Status','Date paid','Notes'],...allPaydays(j).map(i=>{const p=prec(j,i);return[i,expOf(j,i),recOf(j,i),p.status||'Upcoming',p.paid||'',p.note||'']})];else if(k==='exp')r=[['Week start','Week end','Amount','Notes'],...S.exp.filter(x=>x.job===j.id).map(x=>[x.ws,x.we,x.amt,x.note])];else r=[['Date','Project','Title','Location','Work','Tools','Tasks','Materials','PPE','Problems','Actions','Status','Remarks'],...repsJ(j).map(x=>[x.date,x.proj,x.title,x.loc,x.work,x.tools,x.tasks,x.mat,x.ppe,x.prob,x.act,x.st,x.rem])];$('#bk').value=csv(r);toast('CSV is in the box below. Copy it into a .csv file.');break}
+case'backup':$('#bk').value=JSON.stringify(S);toast('Backup ready. Copy and keep it safe.');break;
+case'restore':try{const o=JSON.parse(val('bk'));if(!o.jobs||!o.jobs.length)throw 0;if(!confirm('Replace all current data with this backup?'))break;S=o;render();toast('Backup restored.')}catch(_){toast('That backup text is not valid.',1)}break}});
+document.addEventListener('change',ev=>{const t=ev.target;if(t.dataset.act==='job'){S.cur=t.value;render()}else if(t.id==='sm'||t.id==='sy'){V.ym=ymd(+$('#sy').value,+$('#sm').value,1).slice(0,7);render()}else if(t.id==='bp'){V.bp=t.value;render()}else if(t.id==='jf'){V.jf=t.value;render()}else if(t.id==='rf'){V.rs=t.value;render()}});
+document.addEventListener('input',ev=>{if(ev.target.id==='rq'){V.rq=ev.target.value;const p=ev.target.selectionStart;render();const i=$('#rq');i.focus();i.setSelectionRange(p,p)}});
+$('#modal').addEventListener('click',ev=>{if(ev.target.id==='modal')closeM()});
+render();
+</script></body></html>
